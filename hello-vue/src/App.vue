@@ -18,14 +18,13 @@
   <form @submit.prevent="adicionar">
     <input v-model.trim="novaMensagem" placeholder="Digite uma mensagem" />
     <button :disabled="!novaMensagem">Adicionar</button>
+    <p>{{ erro }}</p>
   </form>
-
-  <p>{{ erro }}</p>
 
   <input v-model="filtro" placeholder="Busque uma tarefa"/>
 
   <ul v-if="mensagens.itens.length">
-    <li v-for="mensagem in mensagensFiltradas" :key="mensagem.id">
+    <li v-for="mensagem in mensagensFiltradas" :key="mensagem.id" >
       <div v-if="idItemEditando !== mensagem.id" class="estiloBotoes">
         <p :class="{ longo: mensagem.texto.length > 30}">{{ mensagem.id }} -- {{ mensagem.texto }}</p>
         <button @click="remover(mensagem.id)">x</button>
@@ -34,7 +33,8 @@
 
       <div v-if="idItemEditando === mensagem.id" class="estiloBotoes">
         <input v-model="mensagem.texto">
-        <button @click="idItemEditando = null">Salvar</button>
+        <button @click="finalizarEdicao(mensagem.texto)">Salvar</button>
+        <p>{{ erroEdicao }}</p>
       </div>
 
     </li>
@@ -90,6 +90,7 @@ let mensagens = reactive({
 const filtro = ref('')
 
 const erro = ref('')
+const erroEdicao = ref('')
 
 const mensagensFiltradas  = computed(() => {
   if (!filtro.value) {
@@ -121,6 +122,15 @@ const idItemEditando = ref(null)
 
 function editarMensagem(id) {
   idItemEditando.value = id
+}
+
+function finalizarEdicao(novaMensagem) {
+  if (!novaMensagem) {
+    erroEdicao.value = 'Mensagem vazia'
+  } else {
+    idItemEditando.value = null
+    erroEdicao.value = ''
+  }
 }
 
 const limpar = () => {
