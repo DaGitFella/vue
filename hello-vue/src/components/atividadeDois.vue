@@ -163,6 +163,8 @@ const limpar = () => {
   padding: 0;
   margin: 0;
   list-style: none;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 
 .list-item {
