@@ -1,178 +1,38 @@
 <template>
-  <h1>Parte 1</h1>
   <div>
-    <p :class="classContadorUm">Contador: {{ contador }}</p>
-    <button @click="incrementar">Incrementar</button>
-    <button @click="decrementar">Decrementar</button>
+    <button @click="exibirAtividadeUm = !exibirAtividadeUm">
+      {{ exibirAtividadeUm ? 'Ocultar' : 'Mostrar' }} atividade 1
+    </button>
+    <button @click="exibirAtividadeDois = !exibirAtividadeDois">
+      {{ exibirAtividadeDois ? 'Ocultar' : 'Mostrar' }} atividade 2
+    </button>
   </div>
 
-  <div>
-    <p :class="classContadorDois">Contador 2: {{ contadorDois }}</p>
-    <button @click="incrementar2">Incrementar</button>
-    <button @click="decrementar2">Decrementar</button>
+  <div v-if="exibirAtividadeUm">
+    <h2>Contador simples</h2>
+    <atividadeUm />
   </div>
 
-  <p>Soma dos contadores: {{ somaContadores }}</p>
-  <p>----------------------------------------------------------------------------------------</p>
-  <h1>Parte 2</h1>
-  <form @submit.prevent="adicionar">
-    <input v-model.trim="novaMensagem" placeholder="Digite uma mensagem" />
-    <button :disabled="!novaMensagem">Adicionar</button>
-    <p>{{ erro }}</p>
-  </form>
-
-  <input v-model="filtro" placeholder="Busque uma tarefa"/>
-
-  <ul v-if="mensagens.itens.length">
-    <li v-for="mensagem in mensagensFiltradas" :key="mensagem.id" >
-      <div v-if="idItemEditando !== mensagem.id" class="estiloBotoes">
-        <p :class="{ longo: mensagem.texto.length > 30}">{{ mensagem.id }} -- {{ mensagem.texto }}</p>
-        <button @click="remover(mensagem.id)">x</button>
-        <button @click="editarMensagem(mensagem.id)">editar</button>
-      </div>
-
-      <div v-if="idItemEditando === mensagem.id" class="estiloBotoes">
-        <input v-model="mensagem.texto">
-        <button @click="finalizarEdicao(mensagem.texto)">Salvar</button>
-        <p>{{ erroEdicao }}</p>
-      </div>
-
-    </li>
-
-    <p>exibindo {{mensagensFiltradas.length}} de
-      {{mensagens.itens.length}}</p>
-  </ul>
-  <p v-else>Lista vazia</p>
-  <button @click="limpar" v-if="mensagens.itens.length">Limpar lista</button>
-  <p>----------------------------------------------------------------------------------------</p>
+  <div v-if="exibirAtividadeDois" class="grey-background">
+    <h2>Listagem simples</h2>
+    <atividade-dois />
+  </div>
 </template>
 
 <script setup lang="ts">
-import {ref, computed, reactive} from 'vue'
+import { ref } from 'vue'
+import atividadeUm from './components/atividadeUm.vue';
+import atividadeDois from './components/atividadeDois.vue';
 
-// Parte 1
-
-const contador = ref(0)
-
-const contadorDois = ref(1)
-
-const somaContadores = computed(() => contador.value + contadorDois.value)
-
-const classContadorUm = computed(() => contador.value > contadorDois.value ? 'destaque': '')
-const classContadorDois = computed(() => contadorDois.value > contador.value ? 'destaque': '')
-
-const incrementar = () => {
-  contador.value++
-}
-
-const decrementar = () => {
-  contador.value > 0 ? contador.value-- : 0
-}
-
-const incrementar2 = () => {
-  contadorDois.value++
-}
-
-const decrementar2 = () => {
-  contadorDois.value > 0 ?contadorDois.value -- : 0
-}
-
-// -----------------------------------------------------------------------------------------------------------------------
-
-// Parte 2
-
-interface Mensagem {
-  id: number,
-  texto: string
-}
-
-let mensagens = reactive({
-  nextId: 1,
-  itens: [] as Mensagem[]
-})
-
-const filtro = ref('')
-
-const erro = ref('')
-
-const erroEdicao = ref('')
-
-const novaMensagem = ref('')
-
-const mensagensFiltradas  = computed(() => {
-  if (!filtro.value) {
-    return mensagens.itens;
-  }
-
-  const buscaLowerCase = filtro.value.toLowerCase();
-
-  return mensagens.itens.filter(mensagem => {
-    return mensagem.texto.toLowerCase().includes(buscaLowerCase);
-  })
-})
-
-
-const adicionar = () => {
-  if (novaMensagem.value) {
-    mensagens.itens.push({id: mensagens.nextId++, texto: novaMensagem.value})
-  } else {
-    erro.value = 'o campo enviado estava vazio'
-  }
-}
-
-function remover(id: number) {
-  mensagens.itens = mensagens.itens.filter(m => m.id !== id)
-}
-
-const idItemEditando = ref(null)
-
-function editarMensagem(id: number) {
-  idItemEditando.value = id
-}
-
-function finalizarEdicao(novaMensagem): void {
-  if (!novaMensagem) {
-    erroEdicao.value = 'Mensagem vazia'
-  } else {
-    idItemEditando.value = null
-    erroEdicao.value = ''
-  }
-}
-
-const limpar = () => {
-  mensagens.itens = []
-}
+const exibirAtividadeUm = ref(false)
+const exibirAtividadeDois = ref(false)
 
 </script>
 
 <style scoped>
 
-.destaque {
-  font-weight: bold;
-  color: red
+h2 {
+  text-align: center;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.longo {
-  color: green;
-  font-weight: bold;
-}
-
-.estiloBotoes {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-}
 </style>
