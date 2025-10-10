@@ -141,7 +141,7 @@ const limpar = () => {
   align-items: center;
   gap: 10px;
   aspect-ratio: 62/35;
-  border: 1px solid #1E202E;
+  border: none;
   box-shadow: 0 4px 4px 2px rgba(0, 0, 0, 0.25);
   background: none;
   color: #040404;
