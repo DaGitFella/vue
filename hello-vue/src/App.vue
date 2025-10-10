@@ -47,7 +47,7 @@
   <p>----------------------------------------------------------------------------------------</p>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref, computed, reactive} from 'vue'
 
 // Parte 1
@@ -81,16 +81,23 @@ const decrementar2 = () => {
 
 // Parte 2
 
+interface Mensagem {
+  id: number,
+  texto: string
+}
+
 let mensagens = reactive({
   nextId: 1,
-  itens: [
-  ]
+  itens: [] as Mensagem[]
 })
 
 const filtro = ref('')
 
 const erro = ref('')
+
 const erroEdicao = ref('')
+
+const novaMensagem = ref('')
 
 const mensagensFiltradas  = computed(() => {
   if (!filtro.value) {
@@ -100,31 +107,30 @@ const mensagensFiltradas  = computed(() => {
   const buscaLowerCase = filtro.value.toLowerCase();
 
   return mensagens.itens.filter(mensagem => {
-    return mensagem?.texto.toLowerCase().includes(buscaLowerCase);
+    return mensagem.texto.toLowerCase().includes(buscaLowerCase);
   })
 })
 
-const novaMensagem = ref('')
 
 const adicionar = () => {
   if (novaMensagem.value) {
-    mensagens.itens.push({id: mensagens.nextId++, texto: novaMensagem.value, editando: false})
+    mensagens.itens.push({id: mensagens.nextId++, texto: novaMensagem.value})
   } else {
     erro.value = 'o campo enviado estava vazio'
   }
 }
 
-function remover(id) {
-  mensagens.itens = mensagens.itens.filter(m => m?.id !== id)
+function remover(id: number) {
+  mensagens.itens = mensagens.itens.filter(m => m.id !== id)
 }
 
 const idItemEditando = ref(null)
 
-function editarMensagem(id) {
+function editarMensagem(id: number) {
   idItemEditando.value = id
 }
 
-function finalizarEdicao(novaMensagem) {
+function finalizarEdicao(novaMensagem): void {
   if (!novaMensagem) {
     erroEdicao.value = 'Mensagem vazia'
   } else {
