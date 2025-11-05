@@ -1,11 +1,33 @@
-/* Estilos globais */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
+:root {
+    --cor-primaria: #42b983;
+    --texto-base: #333;
+    --espacamento: 8px;
 }
 
-div {
-    padding: 20px;
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    color: var(--texto-base);
+    background: #fafafa;
+    margin: 0;
+    padding: 50px;
+}
+
+.container {
+    max-width: 80%;
+    margin: 0 auto;
+    padding: calc(var(--espacamento) * 2);
+}
+
+.titulo {
+    color: var(--cor-primaria);
+    margin-bottom: var(--espacamento);
+}
+
+.destaque {
+    color: var(--cor-primaria);
+    font-weight: bold;
 }
