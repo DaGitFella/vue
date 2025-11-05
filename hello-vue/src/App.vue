@@ -43,7 +43,7 @@
           <template #titulo>{{ mensagem.titulo }}</template>
           <template #conteudo>{{ mensagem.texto }}</template>
           <template #autor>{{ mensagem.autor }}</template>
-          <template #data>{{ mensagem.data }}</template>
+          <template #data>{{ mensagem.dataHoraIso }}</template>
         </MensagemCard>
       </div>
       <p v-else>Nenhuma mensagem registrada.</p>
@@ -73,7 +73,7 @@
         </div>
       </div>
       <MensagemCard v-for="mensagem in mensagensFiltradas"
-                    :key="mensagens.id"
+                    :key="mensagem.id"
                     :id="mensagem.id"
                     @remover="removerMensagem">
         <template #titulo>{{ mensagem.titulo }}</template>
@@ -82,7 +82,7 @@
         <template #data>{{ formatarDataHora(mensagem.dataHoraIso) }}</template>
         <template #categoria>{{ mensagem.categoria }}</template>
       </MensagemCard>
-      <p v-if="!mensagensFiltradas.length > 0">Nenhuma mensagem encontrada nessa categoria.</p>
+      <p v-if="!mensagensFiltradas.length">Nenhuma mensagem encontrada nessa categoria.</p>
       <p v-else class="destaque">Exibindo {{ mensagensFiltradas.length }} de {{ mensagens.length }}</p>
     </div>
     <p v-else class="vazio">Nenhuma mensagem registrada.</p>
@@ -91,11 +91,13 @@
 
 <script setup lang="ts">
 import {ref, computed} from 'vue'
-import atividadeUm from './components/atividadeUm.vue';
-import atividadeDois from './components/atividadeDois.vue';
-import MensagemCard from "./components/MensagemCard.vue";
-import Contador from "./components/Contador.vue";
-import MensagemForm from "./components/MensagemForm.vue";
+import atividadeUm from '@/components/atividadeUm.vue';
+import atividadeDois from '@/components/atividadeDois.vue';
+import MensagemCard from "@/components/MensagemCard.vue";
+import Contador from "@/components/Contador.vue";
+import MensagemForm from '@/components/MensagemForm.vue';
+
+import { type MensagemEnviar, type MensagemReceber } from './interfaces/MensagmInterface';
 
 const exibirAtividadeUm = ref(false)
 const exibirAtividadeDois = ref(false)
@@ -104,12 +106,12 @@ const exibirAtividadeQuatro = ref(false)
 const exibirAtividadeCinco = ref(false)
 
 // teste de emit (módulo 3)
-function removerMensagem(id) {
+function removerMensagem(id: Number) {
   mensagens.value = mensagens.value.filter((mensagem) => mensagem.id !== id)
 }
 
 // função feia que nem o djabo pra gerar data local (módulo 3)
-function formatarDataHora(isoString) {
+function formatarDataHora(isoString: Date) {
   if (!isoString) return ''
   const dt = new Date(isoString)
   return dt.toLocaleString('pt-BR', {
@@ -119,11 +121,11 @@ function formatarDataHora(isoString) {
 }
 
 // array de mensagens (módulo 3)
-const mensagens = ref([])
+const mensagens = ref<MensagemReceber[]>([])
 
-let nextId = 0
+let nextId: number = 0
 
-function adicionarMensagem(payload) {
+function adicionarMensagem(payload: MensagemEnviar) {
   mensagens.value.push({
     id: nextId++,
     ...payload,
@@ -147,12 +149,12 @@ const categorias = ref([
 const categoria = ref('')
 
 const mensagensFiltradas = computed(() => {
-  if (!categoria.value.length || !categoria) {
+  if (!categoria.value || !categoria) {
     return mensagens.value
   }
 
   return mensagens.value.filter((mensagem) => {
-    return mensagem['categoria'] === categoria.value
+    return mensagem.categoria.categoria === categoria.value
   })
 })
 

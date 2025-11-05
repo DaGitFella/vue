@@ -1,13 +1,15 @@
-<script setup>
+<script setup lang="ts">
 
 import { ref } from "vue";
 
+import type { Categoria } from "../interfaces/MensagmInterface"
+
 const emit = defineEmits(['adicionar', 'limpar'])
 
-const props = defineProps({
-  showClear: Boolean,
-  categorias: Array,
-})
+const props = defineProps<{
+  showClear: boolean,
+  categorias: Categoria[],
+}>();
 
 const titulo = ref('')
 const autor = ref('')
