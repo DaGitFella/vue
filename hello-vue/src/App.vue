@@ -19,16 +19,19 @@
     </button>
   </section>
 
+  <!--  Atividade do módulo 1-->
   <section v-if="exibirAtividadeUm">
     <h2>Contador simples</h2>
     <atividadeUm/>
   </section>
 
+  <!--  Atividade do módulo 2-->
   <section v-if="exibirAtividadeDois" class="grey-background">
     <h2>Listagem simples</h2>
     <atividade-dois/>
   </section>
 
+  <!--  Exemplo do módulo 3-->
   <section v-if="exibirAtividadeTres">
     <div class="container">
       <h1 class="titulo">Lista de mensagens</h1>
@@ -47,10 +50,12 @@
     </div>
   </section>
 
+  <!--  Outro exemplo do módulo 3-->
   <section v-if="exibirAtividadeQuatro">
     <Contador></Contador>
   </section>
 
+  <!--  Atividade do módulo 3-->
   <section v-if="exibirAtividadeCinco">
     <h1 class="titulo">Formulário de mensagens</h1>
     <MensagemForm @adicionar="adicionarMensagem" @limpar="limparMensagens"
