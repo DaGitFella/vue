@@ -1,96 +1,117 @@
+<template>
+  <form class="form" @submit.prevent="enviarMensagem">
+    <div class="grupo">
+      <label for="titulo">Título</label>
+      <input id="titulo"
+        v-model.trim="titulo"
+        type="text"
+        placeholder="Digite o título da mensagem"
+        required
+      />
+    </div>
+
+    <div class="grupo">
+      <label for="conteudo">Conteúdo</label>
+      <textarea id="conteudo"
+        v-model.trim="conteudo"
+        rows="3"
+        placeholder="Escreva o conteúdo da mensagem"
+        required
+      ></textarea>
+    </div>
+
+    <div class="grupo">
+      <label for="autor">Autor</label>
+      <input id="autor"
+        v-model.trim="autor"
+        type="text"
+        placeholder="Seu nome (opcional)"
+      />
+    </div>
+
+    <button class="enviar" type="submit">Adicionar</button>
+  </form>
+</template>
+
 <script setup lang="ts">
+import { ref } from 'vue'
 
-import { ref } from "vue";
+const emit = defineEmits(['adicionar'])
 
-import type { Categoria } from "../interfaces/MensagmInterface"
-
-const emit = defineEmits(['adicionar', 'limpar'])
-
-const props = defineProps<{
-  showClear: boolean,
-  categorias: Categoria[],
-}>();
-
+// campos reativos do formulário
 const titulo = ref('')
+const conteudo = ref('')
 const autor = ref('')
-const texto = ref('')
-const categoria = ref('')
 
-function agoraIso() {
-  return new Date().toISOString()
-}
-
-function limpar() {
-  emit('limpar')
-}
-
-function adicionar() {
-  if (!titulo.value || !texto.value) return
+function enviarMensagem() {
+  if (!titulo.value || !conteudo.value) return
 
   emit('adicionar', {
     titulo: titulo.value,
-    autor: autor.value,
-    texto: texto.value || "Anônimo",
-    dataHoraIso: agoraIso(),
-    categoria: categoria.value,
+    conteudo: conteudo.value,
+    autor: autor.value || 'Anônimo',
+    data_criacao: new Date().toISOString()
   })
 
   titulo.value = ''
+  conteudo.value = ''
   autor.value = ''
-  texto.value = ''
 }
 
 </script>
 
-<template>
-
-  <form class="form" @submit.prevent="adicionar">
-    <input v-model.trim="titulo" placeholder="Título" required />
-
-    <textarea v-model.trim="texto" placeholder="Conteúdo da mensagem" required rows="3"></textarea>
-
-    <select v-model.trim="categoria" required>
-      <option value="">Selecione a categoria</option>
-
-      <option v-for="catg in categorias" :key="catg.id">{{ catg.categoria }}</option>
-    </select>
-
-    <input v-model.trim="autor" placeholder="Autor (opcional)" />
-
-    <button type="submit" @keydown.enter="adicionar">Adicionar</button>
-  </form>
-
-  <button v-if="props.showClear" @click="limpar">Limpar</button>
-
-</template>
-
 <style scoped>
 .form {
-  display: grid;
-  gap: 8px;
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  margin-bottom: 20px;
 }
 
-textarea,
+.grupo {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
 input,
-select {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background: none;
+textarea {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 15px;
+  outline: none;
 }
 
-button {
-  padding: 8px 12px;
-  border: none;
-  background: var(--cor-primaria, #42b983);
+input:focus,
+textarea:focus {
+  border-color: #42b983;
+  box-shadow: 0 0 0 2px rgba(66, 185, 131, 0.2);
+}
+
+button.enviar {
+  background: #42b983;
   color: #fff;
-  border-radius: 6px;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  width: 100%;
+  align-self: flex-end;
+  transition: background 0.2s ease;
 }
 
-button:hover {
-  opacity: .9;
+button.enviar:hover {
+  background: #379f72;
 }
 </style>
+
