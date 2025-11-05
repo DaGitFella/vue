@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script setup>
 
-import {ref} from "vue";
+import { ref } from "vue";
 
 const emit = defineEmits(['adicionar', 'limpar'])
 
@@ -43,16 +43,9 @@ function adicionar() {
 <template>
 
   <form class="form" @submit.prevent="adicionar">
-    <input v-model.trim="titulo"
-           placeholder="Título"
-           required
-    />
+    <input v-model.trim="titulo" placeholder="Título" required />
 
-    <textarea v-model.trim="texto"
-              placeholder="Conteúdo da mensagem"
-              required
-              rows="3"
-    ></textarea>
+    <textarea v-model.trim="texto" placeholder="Conteúdo da mensagem" required rows="3"></textarea>
 
     <select v-model.trim="categoria" required>
       <option value="">Selecione a categoria</option>
@@ -60,9 +53,7 @@ function adicionar() {
       <option v-for="catg in categorias" :key="catg.id">{{ catg.categoria }}</option>
     </select>
 
-    <input v-model.trim="autor"
-           placeholder="Autor (opcional)"
-    />
+    <input v-model.trim="autor" placeholder="Autor (opcional)" />
 
     <button type="submit" @keydown.enter="adicionar">Adicionar</button>
   </form>
@@ -78,7 +69,9 @@ function adicionar() {
   margin-bottom: 16px;
 }
 
-textarea, input, select {
+textarea,
+input,
+select {
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 6px;
@@ -98,5 +91,4 @@ button {
 button:hover {
   opacity: .9;
 }
-
 </style>
